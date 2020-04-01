@@ -1,0 +1,14 @@
+div .divider{
+    display: block;
+    padding:15px!important;
+}
+
+#loginForm, #registerForm{
+	margin:auto;
+	width: 70%;
+}
+
+.hline{
+	width: 60%;
+	margin: auto;
+}

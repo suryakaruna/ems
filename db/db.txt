@@ -1,0 +1,10 @@
+CREATE TABLE user(
+	id int not null AUTO_INCREMENT,
+    username varchar(70),
+    email varchar(50),
+    pass varchar(35),
+    phone varchar(15),
+    userType varchar(5),
+	submit timestamp,
+    PRIMARY KEY(id)
+)
