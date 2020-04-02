@@ -1,4 +1,3 @@
-function getConnection(){
-    connection_str = $.post("../api/db.php");
-    console.log("Connection String :" + connection_str);
+function redirect(url){
+	window.location.href="dashboard.php";
 }

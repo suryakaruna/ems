@@ -8,3 +8,19 @@ CREATE TABLE user(
 	submit timestamp,
     PRIMARY KEY(id)
 )
+
+
+CREATE TABLE event(
+	id int not null AUTO_INCREMENT,
+    title varchar(70),
+    type varchar(100),
+    category varchar(150),
+    venue varchar(300),
+    online BINARY,
+    banner varchar(200),
+    description varchar(500), 
+	startT timestamp,
+    endT timestamp,
+    submit timestamp,
+    PRIMARY KEY(id)
+)
