@@ -87,9 +87,7 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
               $('#loginForm').hide()
               $('#registerForm').show()
         }
-        function redirect(url){
-          window.location.href="dashboard.php";
-        }
+
         $(document).ready(function(){
             
            $('#registerBtn').click(function(){
