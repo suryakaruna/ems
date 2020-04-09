@@ -12,14 +12,30 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
     <title>Document</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" >
     <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css">
+    <link rel="stylesheet" type="text/css" href="css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="css/brands.min.css">
+    <link rel="stylesheet" type="text/css" href="css/regular.min.css">
+    <link rel="stylesheet" type="text/css" href="css/solid.min.css">
+    <link rel="stylesheet" type="text/css" href="css/animate.css">
 </head>
 <body>
-    <dvi class="row">
+    <div class="container">
+ <div class="row"> 
         <div class="container">
             <div class="divider"></div>
-            <a href="api/signout.php" > <p class="text-danger"> Not : <?php echo "$user"; ?> </p> </a> 
-          
-            <a href="#" id="addEvent"> <p class="text-danger"> New Event </p> </a>
+            <a href="api/signout.php" style="float: right;position:relative;"> <p class="text-danger"> Not : <?php echo "$user"; ?> </p> </a> 
+        </div>
+        <div class="container">
+        <div class="row">   
+        <div class="col-md-3 pull-left">
+            <h3>Your Events</h3>
+             <div class="list-group">
+                          
+             </div>
+        </div>
+        <div class="col-md-9 pull-right">
+            <h1>Create New Event</h1>
             <div id="addEventForm">
                 <div class="form-group">
                   <label for="title">Title</label>
@@ -98,23 +114,24 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
                   <input type="datetime-local" class="form-control" id="endtime" >
                 </div>
                 <div class="form-group">
-                  <input type="submit" id="addEventBtn" class="form-control btn btn-success" value="Add Event">
+                  <input type="submit" id="addEventBtn" class="form-control btn btn-success" value="Create Event">
                 </div>
             </div> 
         </div>
-    </dvi>
-  
+    </div>
+    </div>
+ </div>
     
-    
+</div>    
 
     <script src="js/jquery.js"></script>
     <script src="js/main.js"></script>
     <script>
-        $("#addEventForm").hide()
-        $(document).ready(function(){
-            $("#addEvent").click(function(){
-                $("#addEventForm").show()
-            });
+ 
+        getDashboard();
+    
+    $(document).ready(function(){
+
             $("#addEventBtn").click(function(){
                 $.post("api/addEvent.php",
                     {
@@ -129,9 +146,11 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
                     function(response){
                     console.log("New Event: "+response);
                     if(response == 1)
+                      console.log($('#title').val()+" Event Created");  
                       redirect("eventDashboard.php");
                 });
             });
+
         });
     </script>
     <script src="js/bootstrap.min.js" ></script>
