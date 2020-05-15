@@ -19,10 +19,9 @@
 	background-size:cover!important;
 	background-position:center!important;
 	min-height: 300px!important;
-
+	background-attachment:fixed;
 }
 .event-head h1{
-	z-index: 10;
 	text-align: center;
-
+	padding-top:2.7em;
 }
