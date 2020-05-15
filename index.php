@@ -23,24 +23,24 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
           <div id='registerForm'>
                 <div class="form-group">
                   <label for="rUsername">User Name</label>
-                  <input type="text" class="form-control" id="rUsername" placeholder="Enter Username">
+                  <input type="text" class="form-control" id="rUsername" placeholder="Enter Username" onblur='checkMe(this)'>
                 </div>
 
                 <div class="form-group">
                   <label for="rEmail">Email address</label>
-                  <input type="email" class="form-control" id="rEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                  <input type="email" class="form-control" id="rEmail" aria-describedby="emailHelp" placeholder="Enter email" onblur='checkMe(this)'>
                   <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
 
                 <div class="form-group">
                   <label for="rPassword">Password</label>
-                  <input type="password" class="form-control" id="rPassword" placeholder="Enter Password">
+                  <input type="password" class="form-control" id="rPassword" placeholder="Enter Password" onblur='checkMe(this)'>
                 </div>
                
-                <div class="form-check">
+                <!-- <div class="form-check">
                   <input type="checkbox" class="form-check-input" id="exampleCheck1">
                   <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
+                </div> -->
                 
                 <button type="submit" id="registerBtn" class="form-control btn btn-success">Register</button>
                 <hr>
@@ -59,10 +59,10 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
                   <input type="password" class="form-control" id="password" placeholder="Enter Password">
                 </div>
                 
-                <div class="form-check">
+                <!-- <div class="form-check">
                   <input type="checkbox" class="form-check-input" id="exampleCheck1">
                   <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div>
+                </div> -->
                 
                 <button type="submit" id="loginBtn" class="form-control btn btn-success" >Login</button>
                 <hr>
@@ -78,6 +78,25 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
     <script src="js/jquery.js"></script>
     <script src="js/main.js"></script>
     <script>
+      function checkMe(ele){
+        if($(ele).val()){
+          $(ele).removeClass("in-valid").addClass("valid")
+          return true
+        }
+        else{
+          $(ele).removeClass("valid").addClass("in-valid")
+          return false
+        }
+        
+      }
+      function checkFilled(form){
+        arr = []
+        $(form).find('input').each(function(){
+          arr.push(checkMe(this))
+        });
+        return arr
+    }
+
        $('#loginForm').hide()
         function switchToLogin(){
               $('#registerForm').hide()
@@ -91,7 +110,13 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
         $(document).ready(function(){
             
            $('#registerBtn').click(function(){
-              $.post("api/doRegister.php",
+              result = checkFilled('#registerForm')
+              console.log(result)
+              if(result.includes(false)){
+                console.log("Please " + $($('#registerForm').find('input')[result.indexOf(false)]).attr('placeholder'))
+             
+            }else{
+               $.post("api/doRegister.php",
                 {
                   name:$('#rUsername').val(),
                   email:$('#rEmail').val(),
@@ -102,6 +127,7 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
                   alert("Registered Successfully! Please Login To Continue")
                   switchToLogin()
                 });
+            }
            });
            $('#loginBtn').click(function(){
               $.post("api/authendicate.php",
