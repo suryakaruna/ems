@@ -1,20 +1,27 @@
 <?php
-session_start();
-if(!isset($_SESSION["email"])){
+
+if(!isset($_REQUEST['eve'])){
     echo"<script>
         window.location.href='401.html'
     </script>";
 }
 else{
-    $user = $_SESSION["email"];
-    $userType = $_SESSION["role"];
-    $eve = $_REQUEST['id'];
-
+    $eve = $_REQUEST['eve'];
     require('api/db.php');
-    $sql = "SELECT * from event where id=$eve AND organiser in(SELECT id from user where email='".$_SESSION['email']."')";
+    $sql = "SELECT * from event where id=$eve";
     $events = $conn->query($sql);
     $row = $events->fetch_assoc();
-
+    if($row == null){
+        echo"<script>
+        window.location.href='403.html'
+    </script>";
+    }
+   session_start();
+    if(isset($_SESSION['role']) && $_SESSION['role']=='sponsor'){
+    $t_r = $conn->query("SELECT amount from sponsorship where user=(SELECT id from user where email='".$_SESSION['email']."') AND event=$eve");
+    $r = $t_r->fetch_assoc();
+    $amount = $r['amount'];
+    }
 }
 
 ?>
@@ -48,12 +55,52 @@ else{
                    
              </div>  
              <div class="pull-right col-md-4 ">
-                <button class="btn btn-success"> <i class="fa fa-plus"></i> Register for this event</button>
+                <?php
+            
+                if(isset($_SESSION['email'])){
+                    $user = $_SESSION['email'];
+                    $note = "<br><div onclick='window.history.back()' class='btn btn-primary'> << Back to dashboard </div>";
+                   
+                    if($_SESSION['role'] == 'attend'){
+                        $a_str = "<i class='fas fa-user-check fa-2x'></i><br> You're attendee";
+                        $a_url = "disabled";
+                    }
+                    else{
+                        $a_str = "<i class='fa fa-user-plus fa-2x'></i> <br> I'm am willing to attend";
+                        $a_url = "onclick =\"location.href='user.php?meth=attend&&eve=$eve'\"";
+                    }
+                    if($_SESSION['role']=='sponsor'){
+                        $s_str = "<i class='far fa-money-bill-alt fa-2x'></i><br> Click to sponsor fund";
+                        $s_url = "onclick =\"location.href='pay.php?eve=$eve'\"";
+                        $note = "<br><p class='text-danger'>You Sponsored - $amount</p>".$note;
+                    }
+                    else{
+                        $s_str = "<i class='fas fa-rupee-sign fa-2x'></i><br> I'm am willing to sponsor";
+                        $s_url = "onclick =\"location.href='user.php?meth=sponsor&&eve=$eve'\"";
+                    }
+                    if($_SESSION['role'] == 'user'){
+                        $s_url="disabled";
+                        $a_url = "disabled";
+                    }
+                    
+                }else{
+                    $a_str = "<i class='fa fa-user-plus fa-2x'></i> <br> I'm am willing to attend";
+                    $a_url = "onclick =\"location.href='user.php?meth=attend&&eve=$eve'\""; 
+
+                    $s_str = "<i class='fas fa-rupee-sign fa-2x'></i><br> I'm am willing to sponsor";
+                    $s_url = "onclick =\"location.href='user.php?meth=sponsor&&eve=$eve'\"";
+                    $note="";
+                }
+                
+                echo"<button class='btn btn-success' id='#attend' $a_url > $a_str </button>
+            
+                <br><br>
+                <button class='btn btn-warning' id='#sponsor' $s_url > $s_str </button><br>$note";
+                ?>
             </div>
         </div>
-       
-        
-        
     </div>
+    <script src="js/jquery.js"></script>
+     <script src="js/bootstrap.min.js" ></script>
 </body>
 </html>

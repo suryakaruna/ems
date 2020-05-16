@@ -85,23 +85,27 @@ function getNewEventForm($btn="Create Event", $data=array()){
                   echo" </textarea>
                 </div>
                 <div class='form-group'>
-                <div class='custom-control custom-switch'>
-                  <input type='checkbox' class='custom-control-input' id='mode'>
-                  <label class='custom-control-label' for='mode'>Online Event</label>
+
+                  <input type='checkbox' class='checkbox' id='mode'> Online
+                  
                 </div>
-                </div>
+                ";echo"
+                <script>
+                  document.getElementById('mode').checked = ".(array_key_exists('online',$data)?$data['online']:0)."
+                </script>
+                
                 <div class='form-group'>
                   <label for='starttime'>Start Time</label>
                   <input type='datetime-local' class='form-control' id='starttime' ";
                   if(array_key_exists('startT', $data))
-                    echo"value='".$data['startT']."'";
+                    echo"value='".date('Y-m-d\TH:i',strtotime($data['startT']))."'";
                   echo">
                 </div>
                 <div class='form-group'>
                   <label for='endtime' >End Time</label>
                   <input type='datetime-local' class='form-control' id='endtime' ";
                   if(array_key_exists('endT', $data))
-                    echo"value='".$data['endT']."'";
+                    echo"value='".date('Y-m-d\TH:i',strtotime($data['endT']))."'";
                   echo">
                 </div>
                 <div class='form-group'>

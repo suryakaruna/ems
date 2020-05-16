@@ -23,5 +23,11 @@
 }
 .event-head h1{
 	text-align: center;
-	padding-top:2.7em;
+	padding-top:1.5em;
+	text-shadow:2px 2px white;
+	font-size:4em;
+}
+
+textarea#desc{
+	min-height: 150px;
 }

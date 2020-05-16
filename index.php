@@ -20,32 +20,12 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
         <div class="container">
             <div class="divider"></div>
            
-          <div id='registerForm'>
-                <div class="form-group">
-                  <label for="rUsername">User Name</label>
-                  <input type="text" class="form-control" id="rUsername" placeholder="Enter Username" onblur='checkMe(this)'>
-                </div>
-
-                <div class="form-group">
-                  <label for="rEmail">Email address</label>
-                  <input type="email" class="form-control" id="rEmail" aria-describedby="emailHelp" placeholder="Enter email" onblur='checkMe(this)'>
-                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                </div>
-
-                <div class="form-group">
-                  <label for="rPassword">Password</label>
-                  <input type="password" class="form-control" id="rPassword" placeholder="Enter Password" onblur='checkMe(this)'>
-                </div>
-               
-                <!-- <div class="form-check">
-                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                  <label class="form-check-label" for="exampleCheck1">Check me out</label>
-                </div> -->
-                
-                <button type="submit" id="registerBtn" class="form-control btn btn-success">Register</button>
+          
+               <?php require'util/newUser.php'; 
+                getUserForm('<button type="submit" id="registerBtn" class="form-control btn btn-success">Register</button>
                 <hr>
-                <button  onclick="switchToLogin()" class="form-control btn btn-primary">Login</button>
-          </div>
+                <button  onclick="switchToLogin()" class="form-control btn btn-primary">Login</button>');
+                ?>
 
             <div id='loginForm'>
                 <div class="form-group">
@@ -111,7 +91,7 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
             
            $('#registerBtn').click(function(){
               result = checkFilled('#registerForm')
-              console.log(result)
+              // console.log(result)
               if(result.includes(false)){
                 console.log("Please " + $($('#registerForm').find('input')[result.indexOf(false)]).attr('placeholder'))
              

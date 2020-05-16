@@ -24,3 +24,31 @@ CREATE TABLE event(
     submit timestamp,
     PRIMARY KEY(id)
 )
+
+
+
+CREATE TABLE sponsorship(
+id int not null AUTO_INCREMENT,
+user varchar(5),
+event varchar(5),
+amount varchar(10),
+submit timestamp,
+PRIMARY KEY(id)
+);
+
+
+CREATE TABLE planner (
+    id int not null AUTO_INCREMENT,
+    list varchar(5),
+    agenda varchar(2500),
+    submit timestamp,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE clist(
+    id int not null AUTO_INCREMENT,
+    product varchar(200),
+    price varchar(10),
+    submit timestamp,
+    PRIMARY KEY(id)
+);

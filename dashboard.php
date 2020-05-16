@@ -2,6 +2,18 @@
 session_start();
 if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
    $user = $_SESSION["email"];
+   $role = $_SESSION["role"];
+    $me = $_SESSION['me'];
+    require('api/db.php');
+    if($role == 'user')
+        $sql = "SELECT * from event where organiser in(SELECT id from user where email='".$_SESSION['email']."')";
+    else if ($role == 'attend'){
+        $sql = "SELECT * from event where attendees like '%".$me."%'";
+    }
+    else 
+        $sql = "SELECT * from event where sponsor in(SELECT id from user where email='".$_SESSION['email']."')";
+    $events = $conn->query($sql);
+
 }else{
     echo"<script>
         window.location.href='401.html'
@@ -13,15 +25,9 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Dashboard</title>
     <link href="css/bootstrap.min.css" rel="stylesheet" >
     <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="css/fontawesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/all.min.css">
-    <link rel="stylesheet" type="text/css" href="css/brands.min.css">
-    <link rel="stylesheet" type="text/css" href="css/regular.min.css">
-    <link rel="stylesheet" type="text/css" href="css/solid.min.css">
-    <link rel="stylesheet" type="text/css" href="css/animate.css">
 </head>
 <body>
     <div class="container">
@@ -31,24 +37,42 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
             <a href="api/signout.php" style="float: right;position:relative;"> <p class="text-danger"> Not : <?php echo "$user"; ?> </p> </a> 
         </div>
         <div class="container">
-        <div class="row">   
-        <div class="col-md-3 pull-left">
-            <h3>Your Events</h3>
-             <div class="list-group">
-                          
-             </div>
-        </div>
-        <div class="col-md-9 pull-right">
-            <h1>Create New Event</h1>
-
+            <div class="row">   
+            <div class="col-md-3 pull-left">
+                <h3>Your Events</h3>
+                 <div class="list-group">
+                  <?php
+                  if($events->num_rows>0)
+                    while($row = $events->fetch_assoc()){
+                        echo "<div class='dash list-group-item' eve=".$row['id'].">".$row['title']."<i class='fas fa-angle-double-right float-right'></i></div>";
+                    }
+                  ?>            
+                 </div>
+            </div>
             <?php 
-            require'util/newEventForm.php';
-            getNewEventForm();
+            echo"
+            <div class='col-md-9 pull-right'>";
+            if($role=='user'){
+            
+                echo"<h1>Create New Event</h1>";
+
+                
+                require'util/newEventForm.php';
+                getNewEventForm();
+              }  
+              else{
+                if($role=='sponsor')
+                    echo"<h2> Welcom back sponsor</h2>";
+                else
+                    echo"<h2> Welcom back attendee</h2>";
+            }
+            echo "</div>";
+        
+        
             ?> 
 
+            </div>
         </div>
-    </div>
-    </div>
  </div>
     
 </div>    
@@ -57,10 +81,14 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
     <script src="js/main.js"></script>
     <script>
  
-        getDashboard();
+        // getDashboard();
     
-    $(document).ready(function(){
+   $(document).ready(function(){
 
+    $(".dash.list-group-item").click(function(){
+
+        redirect("<?php echo ($role=='user')? 'eventDashboard': 'event';?>.php?eve="+$(this).attr('eve'));
+    });
             $("#addEventBtn").click(function(){
                 $.post("api/addEvent.php",
                     {
@@ -73,10 +101,11 @@ if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
                         end:$("#endtime").val()
                     },
                     function(response){
-                    console.log("New Event: "+response);
                     if(response == 1)
                       console.log($('#title').val()+" Event Created");  
-                      // sredirect("dashboard.php");
+                    else
+                        console.log("New Event: "+response);
+                    
                 });
             });
 

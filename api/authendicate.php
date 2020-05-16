@@ -12,6 +12,7 @@ if($email == $row['email'] && $pass == $row['pass']){
 
 	$_SESSION["email"] = $row['email'];
 	$_SESSION["role"] = $row['userType'];
+	$_SESSION['me'] = $row['id'];
 		$test=true;
 }
 }

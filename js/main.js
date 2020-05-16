@@ -2,25 +2,29 @@ function redirect(url){
 	window.location.href=url;
 }
 
-events = {};
-
-function getDashboard(){
-   // $("#addEventForm").hide();  //v1
-   $.post("api/fetchEvents.php",function(response){
-                events = JSON.parse(response);
-                for(let i=0; i<events.length; i++){
-                      event = events[i];
-                      $("<div class='dash list-group-item' id="+event.id+">"+event.title+"<i class='fas fa-angle-double-right float-right'></i></div>").appendTo(".list-group");
-                }
-               // $("<div class='list-group-item text-center' id='addEvent'><i class='fas fa-plus-square text-primary'></i></div>").appendTo(".list-group"); //v1
-            });
-}
-
-
+function checkMe(ele){
+        if($(ele).val()){
+          $(ele).removeClass("in-valid").addClass("valid")
+          return true
+        }
+        else{
+          $(ele).removeClass("valid").addClass("in-valid")
+          return false
+        }
+        
+      }
+      function checkFilled(form){
+        arr = []
+        $(form).find('input').each(function(){
+          arr.push(checkMe(this))
+        });
+        return arr
+    }
+    
 $(document).ready(function(){
 
 	$(".dash.list-group-item").click(function(){
-    	redirect("eventDashboard.php?id="+$(this).attr('id'));
+    	redirect("eventDashboard.php?eve="+$(this).attr('eve'));
 	});
 
 // 	$("#addEvent").click(function(){
