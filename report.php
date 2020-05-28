@@ -1,6 +1,6 @@
 <?php
 
-if(!isset($_REQUEST['eve'])){
+if(!isset($_REQUEST['eve']) && !isset($_SESSION['role']) && ($_SESSION['role'] != 'user')){
     echo"<script>
         window.location.href='401.html'
     </script>";
@@ -38,10 +38,14 @@ else{
     <div class="container">
         <br><br>
         <div class="row">
+        	<div class="container">
+        	<a href="#" onclick='window.print()' style="float: right;position: relative;">Click To Print</a>
+            </div>
             <div class="col-md-12 pull-left">
             	<h1 class='text-center'><?php echo $row['title']; ?></h1>
-                  
-                   	<p style="text-indent:5em;" class='text-justify'>The event <b><?php echo $row['title']; ?></b> was created at <b><?php echo $row['submit'];?></b> by Mr/Mrs.<b class='text-capitalize'>"<?php echo $user;?>"</b></p>
+                  <br>
+                   	<p style="text-indent:5em;" class='text-justify'>The event <b><?php echo $row['title']; ?></b> was created at <b><?php echo $row['submit'];?></b> by <b> Mr/Mrs.<span class='text-capitalize'><?php echo $user;?></span></b></p>
+                    <br>
                     <h3>Event Type & Category:</h3>
                    <p style="text-indent:5em;" class='text-justify'> <?php echo $row['type']; ?> - <?php echo $row['category']; ?></p>
 
@@ -56,14 +60,14 @@ else{
                    <p style="text-indent:5em;" class='text-justify'> <?php 
                    	echo ($row['online'] == 1)?'Online':'Offline'; ?> event</p>
                    	<h3> Agenda </h3>
-                   		<textarea id='ag' class='text-left form-control' disabled='disabled' style='margin-left:5em;background:transparent;border:none;'> </textarea>
+                   		<textarea id='ag' class='text-left form-control' disabled='disabled' style='margin-left:5em;background:transparent;border:none;height:25vh'> </textarea>
                    	<h3> Attendees</h3>
                    	<?php
                     $r = $conn->query("select attendees from event where id = $eve");
                     $rw = $r->fetch_assoc();
                     $list = explode(",",$rw['attendees']);
                    if($list[0] == null)
-                        echo" <h4>No Records Found!</h4> ";
+                        echo" <h4> Nil </h4> ";
                     else{
                  echo"<div class='table-responsive'>
                  <table class='table table-hover table-bordered'> 
@@ -84,7 +88,7 @@ else{
                  <?php
                     $r = $conn->query("select * from sponsorship where event = $eve");
                     if(!($r->num_rows>0))
-                        echo" <h4>No Records Found!</h4> ";
+                        echo" <h4>Nil</h4> ";
                     else{
                  echo"<div class='table-responsive'>
                  <table class='table table-hover table-bordered'> 

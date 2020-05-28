@@ -3,12 +3,21 @@ session_start();
 if(isset($_SESSION["email"]) && isset($_SESSION["role"])){
    $user = $_SESSION["email"];
    $role = $_SESSION["role"];
-    $me = $_SESSION['me'];
+    
     require('api/db.php');
     if($role == 'user')
         $sql = "SELECT * from event where organiser in(SELECT id from user where email='".$_SESSION['email']."')";
     else if ($role == 'attend'){
+        if(isset($_SESSION['me']))
+             $me = $_SESSION['me'];
+        else{
+            $u_rs = $conn->query("select id from user where email=".$_SESSION['email']);
+            $u_rw = $u_rs->fetch_assoc();
+            $me = $u_rw['id'];
+        }
+
         $sql = "SELECT * from event where attendees like '%".$me."%'";
+        
     }
     else 
         $sql = "SELECT * from event where sponsor in(SELECT id from user where email='".$_SESSION['email']."')";
